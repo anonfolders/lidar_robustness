@@ -15,3 +15,4 @@ Contains data presented in the paper
 ## Source code (src)
 
 Includes the code developed for the experiment.
+- wip: cleaning of personal details before upload
