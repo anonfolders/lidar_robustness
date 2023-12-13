@@ -19,7 +19,7 @@ def read_pc_bin(filename):
 
 
 def write_pc_bin(pcd: np.ndarray, filename):
-    print(filename)
+    print(f'Writing {filename}')
     pcd.tofile(filename)
 
 

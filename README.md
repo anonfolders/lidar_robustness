@@ -70,7 +70,7 @@ Once done, locate the output in `OpenPCDet-SORBET/tools/SORBET_output/model_outp
 
 9. To visualize the results, run
 ```bash
-python visualize_pointpillar_output.py --baseline <baseline_results> --perturbed <perturbed_results>
+python visualize_model_detection_output.py --baseline <baseline_results> --perturbed <perturbed_results>
 ```
 where
 

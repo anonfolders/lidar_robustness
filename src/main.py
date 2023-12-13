@@ -77,10 +77,16 @@ if __name__ == "__main__":
     parser.add_argument('--count', dest='rounds_count', type=int, help='Number of rounds to generate')
     parser.add_argument('--type', dest='perturbation_type', type=str, help='Type of perturbation to apply')
     parser.add_argument('--direction', dest='direction', type=str, help='Direction in case of local directional perturbation')
+    parser.add_argument('--data', dest='data_type', type=str, help='Use all training data or only validation')
     args = parser.parse_args()
 
     pmode = None
     loc_dir = None
+    rounds_to_run = int(args.rounds_count)
+    train_data_scope = args.data_type
+    if train_data_scope != 'all':
+        train_data_scope = 'validation'
+    
     if args.perturbation_type in types_dict:
         pmode = types_dict[args.perturbation_type]
         if pmode is PM.DIRECT_UNIFORM or pmode is PM.DIRECT_NORMAL or pmode is PM.DIRECT_LAPLACE:
@@ -92,30 +98,40 @@ if __name__ == "__main__":
     else:
         print(f'Invalid perturbation type, select from {types_dict.keys()}')
         sys.exit()
-
+    
+    print(f'Generating {rounds_to_run} round(s) of type {args.perturbation_type} with scope {train_data_scope}')
+        
 
     # Step 1: create empty folders
     new_folder_paths = []
 
-    # for _ in range(args.rounds_count):
-    for _ in range(1):
+    for _ in range(args.rounds_count):
+    # for _ in range(1):
         new_folder_paths.append(create_new_perturb_folder(data_path))
 
     # Step 2: get the lidar data & gt bboxes
-    pcd_files = sorted(get_validation_file_paths(original_pcd_path, VALIDATION_FRAMES))
+    if train_data_scope == 'validation':
+        pcd_files = sorted(get_validation_file_paths(original_pcd_path, VALIDATION_FRAMES))
 
-    all_points_in_bboxes = []
-    with open(POINTS_IN_BBOXES_FILENAME, 'r') as fd:
-        for line in fd.readlines():
-            all_points_in_bboxes.append(line.strip().split())
-    
-    # Step 3: get validation frame names (ids only)
-    frame_ids = []
-    with open(VALIDATION_FRAMES, 'r') as fd:
-        for lidx, line in enumerate(fd.readlines()):
-            frame_id = line.strip()
-            frame_ids.append(frame_id)
-    frame_ids = sorted(frame_ids)
+        all_points_in_bboxes = []
+        with open(POINTS_IN_BBOXES_FILENAME, 'r') as fd:
+            for line in fd.readlines():
+                all_points_in_bboxes.append(line.strip().split())
+        
+        # Step 3: get validation frame names (ids only)
+        frame_ids = []
+        with open(VALIDATION_FRAMES, 'r') as fd:
+            for lidx, line in enumerate(fd.readlines()):
+                frame_id = line.strip()
+                frame_ids.append(frame_id)
+        frame_ids = sorted(frame_ids)
+    elif train_data_scope == 'all':
+        all_bin_names = [os.path.join(original_pcd_path, f'{str(fid).zfill(6)}.bin') for fid in range(7480 + 1)]
+        pcd_files = all_bin_names
+        # new_dir_path = os.path.join(root, new_dir_name)
+    else:
+        print(f'Wrong data scope {train_data_scope}')
+        sys.exit()
 
     # Step 4: populate new folder with perturbation
     # read lidar data for files

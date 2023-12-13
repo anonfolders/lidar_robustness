@@ -11,7 +11,7 @@ def create_new_perturb_folder(path):
     # get only immediate folders
     root, dirs, _ = next(os.walk(path))
     # dirs = sorted(dirs)
-    dirs = [d for d in dirs if d != 'baseline']
+    dirs = [d for d in dirs if d != 'baseline' and d != 'KITTI']
     # handles base case when empty
     new_dir_idx_start = 0
     if dirs:
