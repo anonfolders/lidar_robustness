@@ -88,7 +88,7 @@ where
 
 1. Setup [Trajectron++](https://github.com/StanfordASL/Trajectron-plus-plus)
 
-2. Copy [notebook](src/RQ2/run_rq2_experiment.ipynb) to `Trajectron-plus-plus/experiments/nuScenes/`
+2. Copy [notebooks](src/RQ2/r) to `Trajectron-plus-plus/experiments/nuScenes/`
 
 3. Run notebook cell-by-cell
 
